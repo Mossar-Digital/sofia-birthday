@@ -20,30 +20,20 @@ on conflict (id) do nothing;
 -- ── 2. Sécurité au niveau des lignes ────────────────────────────────
 alter table public.site_config enable row level security;
 
--- Lecture publique : la page d'accueil est rendue côté serveur avec la
--- clé anon. Le mot de passe est retiré du JSON avant l'envoi au
--- navigateur (voir src/lib/store.ts → toPublicConfig).
-drop policy if exists "site_config lecture publique" on public.site_config;
-create policy "site_config lecture publique"
-  on public.site_config
-  for select
-  using (true);
-
--- Écriture : réservée à la clé service_role, utilisée uniquement par les
+-- AUCUNE politique n'est créée ici, volontairement : avec RLS actif et
+-- zéro politique, la table est fermée à tous les rôles publics.
+--
+-- La table contient le mot de passe de Sofia en clair. La clé anon est
+-- publique — elle est livrée dans le JavaScript de la page. Lui donner
+-- le droit de lecture reviendrait à publier ce mot de passe ; lui donner
+-- le droit d'écriture permettrait à quiconque de réécrire le cadeau.
+--
+-- Seule la clé service_role accède donc à cette table. Elle contourne
+-- RLS par conception, reste côté serveur, et n'est employée que par les
 -- routes d'API protégées par ADMIN_SECRET_KEY.
 --
--- Si vous NE renseignez PAS SUPABASE_SERVICE_ROLE_KEY, décommentez la
--- politique ci-dessous pour autoriser l'écriture avec la clé anon.
--- L'accès au studio reste protégé par ADMIN_SECRET_KEY, mais la clé anon
--- étant publique, quelqu'un qui la récupère pourrait écrire dans la table.
--- La clé service_role est nettement préférable.
---
--- drop policy if exists "site_config ecriture anon" on public.site_config;
--- create policy "site_config ecriture anon"
---   on public.site_config
---   for all
---   using (true)
---   with check (true);
+-- ⚠ SUPABASE_SERVICE_ROLE_KEY est donc OBLIGATOIRE dès que Supabase est
+--   configuré. Sans elle, l'application basculera sur son repli local.
 
 -- ── 3. Buckets de stockage ──────────────────────────────────────────
 insert into storage.buckets (id, name, public)

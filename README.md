@@ -62,12 +62,18 @@ une pochette lourde part dans Supabase Storage.
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...   # optionnelle mais conseillée
+SUPABASE_SERVICE_ROLE_KEY=eyJ...   # OBLIGATOIRE
 ```
 
-`SUPABASE_SERVICE_ROLE_KEY` permet au serveur d'écrire dans `site_config` même
-avec des politiques RLS strictes. Sans elle, décommentez la politique d'écriture
-anon indiquée dans le fichier SQL.
+`SUPABASE_SERVICE_ROLE_KEY` n'est pas optionnelle. La table `site_config`
+contient le mot de passe de Sofia en clair, et la clé anon est **publique** :
+elle est livrée dans le JavaScript de la page. La table est donc fermée à la
+clé anon, et seul le serveur y accède, via `service_role`, depuis des routes
+protégées par `ADMIN_SECRET_KEY`.
+
+> Si votre projet a été créé avec une ancienne version du schéma qui autorisait
+> la clé anon, exécutez [`supabase/harden.sql`](supabase/harden.sql) après avoir
+> renseigné `SUPABASE_SERVICE_ROLE_KEY`.
 
 **Les téléversements passent directement du navigateur vers Storage**, ce qui
 contourne la limite de 4,5 Mo des fonctions serverless : vos MP3 peuvent être
@@ -89,7 +95,7 @@ Renseignez les variables d'environnement dans **Settings → Environment Variabl
 | `ADMIN_SECRET_KEY` | oui | Accès à `/studio` |
 | `NEXT_PUBLIC_SUPABASE_URL` | pour la prod | Persistance et fichiers |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | pour la prod | Idem |
-| `SUPABASE_SERVICE_ROLE_KEY` | conseillée | Écriture serveur garantie |
+| `SUPABASE_SERVICE_ROLE_KEY` | avec Supabase | Seul accès à `site_config` — ne jamais exposer |
 
 > Sans Supabase en production, le studio affichera « Mémoire seule » et les
 > modifications ne survivront pas à un redéploiement.
