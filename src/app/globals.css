@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-espresso font-sans text-creme antialiased;
+    /* Deux halos chauds : un doré en haut, un carmin en bas. */
+    background-image:
+      radial-gradient(120% 70% at 50% -10%, rgba(168, 124, 79, 0.34), transparent 62%),
+      radial-gradient(100% 60% at 50% 108%, rgba(155, 43, 52, 0.26), transparent 66%),
+      linear-gradient(180deg, #231309 0%, #2c1a0d 45%, #1d0f07 100%);
+    background-attachment: fixed;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    @apply bg-carmin/60 text-parchemin;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    @apply outline-none ring-2 ring-dore/70 ring-offset-2 ring-offset-espresso;
+  }
+}
+
+@layer components {
+  /* Filet doré très fin, utilisé sur les cartes et les modales. */
+  .hairline {
+    @apply ring-1 ring-inset ring-dore/25;
+  }
+
+  .heading-serif {
+    @apply font-serif font-light tracking-wide;
+  }
+
+  /* Texte doré qui capte la lumière au ralenti. */
+  .text-gilded {
+    background: linear-gradient(
+      100deg,
+      #c8a34c 0%,
+      #f3e0af 28%,
+      #e6c879 46%,
+      #c8a34c 70%,
+      #a8823a 100%
+    );
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    @apply animate-shimmer;
+  }
+
+  .parchment {
+    background-color: #f7eddc;
+    background-image:
+      radial-gradient(90% 60% at 18% 8%, rgba(200, 163, 76, 0.16), transparent 58%),
+      radial-gradient(70% 50% at 88% 94%, rgba(155, 43, 52, 0.12), transparent 60%),
+      linear-gradient(176deg, #f9f1e2 0%, #f2e4cc 52%, #e9d7ba 100%);
+  }
+
+  .grain::after {
+    content: '';
+    background-image: var(--grain);
+    @apply pointer-events-none absolute inset-0 opacity-[0.055] mix-blend-multiply;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-dore/25 bg-espresso/45 px-4 py-3 text-creme
+           placeholder:text-latte/45 transition focus:border-dore/60;
+  }
+
+  .label {
+    @apply mb-1.5 block text-[11px] font-medium uppercase tracking-[0.16em] text-latte/70;
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-b
+           from-doreClair to-dore px-6 py-3 font-medium text-espresso shadow-lg
+           shadow-black/30 transition active:scale-[0.97] disabled:opacity-50;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-dore/30
+           px-5 py-2.5 text-sm text-creme/85 transition hover:border-dore/60
+           hover:text-creme active:scale-[0.97] disabled:opacity-50;
+  }
+}
+
+@layer utilities {
+  /* Réserve l'espace des encoches et barres système sur mobile. */
+  .safe-b {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
