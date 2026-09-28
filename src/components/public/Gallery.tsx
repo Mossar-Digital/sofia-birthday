@@ -12,7 +12,7 @@ interface GalleryProps {
   photos: Photo[];
 }
 
-/** Inclinaisons fixes par position : un scrapbook, pas une grille. */
+/** Fixed tilt per position: a scrapbook, not a grid. */
 const TILTS = [-2.6, 1.9, -1.4, 2.8, -2.1, 1.3, -3.1, 2.2];
 
 export default function Gallery({ photos }: GalleryProps) {
@@ -42,16 +42,16 @@ export default function Gallery({ photos }: GalleryProps) {
   return (
     <section id="souvenirs" className="relative px-5 py-20 sm:py-24">
       <SectionTitle
-        overline="Les souvenirs"
-        title="Notre petit album"
-        description="Quelques instants que je garde à portée de main."
+        overline="The memories"
+        title="Our little album"
+        description="A few moments I keep within reach."
       />
 
       {photos.length === 0 ? (
         <div className="mx-auto flex max-w-sm flex-col items-center gap-3 rounded-3xl border border-dashed border-dore/25 px-6 py-12 text-center">
           <ImageOff className="h-6 w-6 text-dore/45" />
           <p className="text-sm text-latte/65">
-            L&apos;album est encore vide — les plus belles pages sont à venir.
+            The album is still empty — the best pages are yet to come.
           </p>
         </div>
       ) : (
@@ -71,19 +71,19 @@ export default function Gallery({ photos }: GalleryProps) {
                 whileHover={{ rotate: 0, scale: 1.03, y: -5 }}
                 whileTap={{ scale: 0.97 }}
                 transition={{ type: 'spring', damping: 18, stiffness: 260 }}
-                aria-label={photo.caption || 'Agrandir la photo'}
+                aria-label={photo.caption || 'Enlarge the photo'}
               >
-                {/* Cadre Polaroid : marge fine en haut, large en bas */}
+                {/* Polaroid frame: thin margin on top, wide one below */}
                 <div className="rounded-[4px] bg-gradient-to-b from-[#FBF5EA] to-[#EBDCC3] p-2.5 pb-11 shadow-polaroid">
                   <div className="relative aspect-square overflow-hidden bg-cacao/30">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={photo.url}
-                      alt={photo.caption || 'Souvenir'}
+                      alt={photo.caption || 'Memory'}
                       loading="lazy"
                       className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.06]"
                     />
-                    {/* Reflet diagonal, comme sur un vrai tirage */}
+                    {/* Diagonal sheen, like a real print */}
                     <span className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/8 to-white/14" />
                   </div>
 
@@ -116,7 +116,7 @@ export default function Gallery({ photos }: GalleryProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={active.url}
-                alt={active.caption || 'Souvenir'}
+                alt={active.caption || 'Memory'}
                 className="max-h-[62dvh] w-full object-contain"
               />
             </div>
@@ -136,7 +136,7 @@ export default function Gallery({ photos }: GalleryProps) {
                   <button
                     type="button"
                     onClick={() => go(-1)}
-                    aria-label="Photo précédente"
+                    aria-label="Previous photo"
                     className="flex h-9 w-9 items-center justify-center rounded-full bg-cacao/10 text-cacao transition hover:bg-cacao/20"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -147,7 +147,7 @@ export default function Gallery({ photos }: GalleryProps) {
                   <button
                     type="button"
                     onClick={() => go(1)}
-                    aria-label="Photo suivante"
+                    aria-label="Next photo"
                     className="flex h-9 w-9 items-center justify-center rounded-full bg-cacao/10 text-cacao transition hover:bg-cacao/20"
                   >
                     <ChevronRight className="h-4 w-4" />

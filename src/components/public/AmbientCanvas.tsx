@@ -23,7 +23,7 @@ const PETAL_COLORS = ['#BE4550', '#9B2B34', '#C8A34C', '#E6C879', '#C9A47C', '#A
 const HEART_COLORS = ['#BE4550', '#9B2B34', '#C8A34C'];
 
 function drawPetal(ctx: CanvasRenderingContext2D, size: number) {
-  // Deux courbes miroir : un pétale en amande, plus organique qu'une ellipse.
+  // Two mirrored curves: an almond petal, more organic than an ellipse.
   ctx.beginPath();
   ctx.moveTo(0, -size);
   ctx.bezierCurveTo(size * 0.75, -size * 0.45, size * 0.55, size * 0.6, 0, size);
@@ -43,9 +43,9 @@ function drawHeart(ctx: CanvasRenderingContext2D, size: number) {
 }
 
 /**
- * Pétales et cœurs qui tombent lentement, en fond de page.
- * Purement décoratif : masqué aux lecteurs d'écran et désactivé
- * si l'utilisateur a demandé moins d'animations.
+ * Petals and hearts drifting slowly down behind the page. Purely decorative:
+ * hidden from screen readers, and switched off when the visitor has asked
+ * for reduced motion.
  */
 export default function AmbientCanvas({ density = 26 }: { density?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -94,13 +94,13 @@ export default function AmbientCanvas({ density = 26 }: { density?: number }) {
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Moins de particules sur petit écran : mobile d'abord.
+      // Fewer particles on a small screen: mobile first.
       const count = Math.round(density * Math.min(1, Math.max(0.55, width / 900)));
       particles = Array.from({ length: count }, () => make(true));
     };
 
     const render = (now: number) => {
-      // Delta en secondes, borné pour éviter un bond après un onglet en veille.
+      // Delta in seconds, capped to avoid a jump after a backgrounded tab.
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 

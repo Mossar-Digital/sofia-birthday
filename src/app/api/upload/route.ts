@@ -9,7 +9,7 @@ import { isAuthenticated } from '@/lib/auth';
 export const dynamic = 'force-dynamic';
 
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads');
-const MAX_BYTES = 4 * 1024 * 1024; // marge sous la limite de 4,5 Mo des fonctions
+const MAX_BYTES = 4 * 1024 * 1024; // headroom under the 4.5 MB function limit
 
 function safeExtension(name: string): string {
   const ext = path.extname(name).toLowerCase();
@@ -17,13 +17,13 @@ function safeExtension(name: string): string {
 }
 
 /**
- * Repli de développement : écrit dans `public/uploads`.
- * En production, le studio téléverse directement vers Supabase Storage,
- * ce qui contourne la limite de taille des fonctions serverless.
+ * Development fallback: writes into `public/uploads`.
+ * In production the studio uploads straight to Supabase Storage, which
+ * sidesteps the serverless function body limit.
  */
 export async function POST(request: Request) {
   if (!(await isAuthenticated())) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    return NextResponse.json({ error: 'Not authorised' }, { status: 401 });
   }
 
   const form = await request.formData();
@@ -31,12 +31,12 @@ export async function POST(request: Request) {
   const folder = String(form.get('folder') ?? 'divers').replace(/[^a-z0-9_-]/gi, '') || 'divers';
 
   if (!(file instanceof File)) {
-    return NextResponse.json({ error: 'Aucun fichier reçu' }, { status: 400 });
+    return NextResponse.json({ error: 'No file received' }, { status: 400 });
   }
   if (file.size > MAX_BYTES) {
     return NextResponse.json(
       {
-        error: `Fichier trop lourd pour le mode local (${(file.size / 1024 / 1024).toFixed(1)} Mo, max 4 Mo). Configurez Supabase Storage pour les gros fichiers.`,
+        error: `File too large for local mode (${(file.size / 1024 / 1024).toFixed(1)} MB, max 4 MB). Configure Supabase Storage for larger files.`,
       },
       { status: 413 },
     );
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('[upload]', error);
     return NextResponse.json(
-      { error: 'Écriture impossible (système de fichiers en lecture seule). Configurez Supabase Storage.' },
+      { error: 'Cannot write (read-only file system). Configure Supabase Storage.' },
       { status: 500 },
     );
   }

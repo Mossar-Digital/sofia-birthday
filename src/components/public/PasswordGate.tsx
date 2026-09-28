@@ -12,7 +12,7 @@ interface PasswordGateProps {
 const HEART_PATH =
   'M12 21s-7.5-4.7-9.6-9.2C.7 8.3 2.6 4.5 6.2 4.5c2 0 3.4 1.1 4 2 .6-.9 2-2 4-2 3.6 0 5.5 3.8 3.8 7.3C19.5 16.3 12 21 12 21z';
 
-/** Feu d'artifice discret : cœurs carmin, puis paillettes dorées. */
+/** A quiet little firework: carmine hearts, then gold flecks. */
 async function celebrate() {
   const confetti = (await import('canvas-confetti')).default;
   const heart = confetti.shapeFromPath({ path: HEART_PATH });
@@ -51,7 +51,7 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // Sur mobile on n'ouvre pas le clavier de force : focus au bureau seulement.
+    // Don't force the keyboard open on a phone — focus on desktop only.
     if (window.matchMedia('(min-width: 768px)').matches) inputRef.current?.focus();
   }, []);
 
@@ -79,7 +79,7 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
 
       setOpening(true);
       void celebrate();
-      // Laisse l'animation d'ouverture se dérouler avant de révéler la page.
+      // Let the opening animation play out before revealing the page.
       setTimeout(onUnlocked, 1150);
     } catch {
       setError(true);
@@ -94,7 +94,7 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
       animate={opening ? { opacity: 0 } : { opacity: 1 }}
       transition={{ duration: 0.9, delay: opening ? 0.45 : 0, ease: 'easeInOut' }}
     >
-      {/* Voile opaque : rien de la page ne filtre avant l'ouverture. */}
+      {/* Solid veil: nothing of the page shows through before it opens. */}
       <motion.div
         className="absolute inset-0 bg-espresso"
         style={{
@@ -105,7 +105,7 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
         transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       />
 
-      {/* Halo doré qui s'élargit au moment du déverrouillage */}
+      {/* Gold bloom that widens at the moment of unlocking */}
       <AnimatePresence>
         {opening && (
           <motion.div
@@ -138,10 +138,10 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
             <Heart className="h-7 w-7 text-carminClair" strokeWidth={1.6} fill="currentColor" />
           </motion.div>
 
-          <p className="mb-2 text-[11px] uppercase tracking-[0.34em] text-dore/70">Pour toi</p>
-          <h1 className="heading-serif mb-3 text-3xl text-creme">Quelque chose t&apos;attend</h1>
+          <p className="mb-2 text-[11px] uppercase tracking-[0.34em] text-dore/70">For you</p>
+          <h1 className="heading-serif mb-3 text-3xl text-creme">Something is waiting</h1>
           <p className="mx-auto mb-9 max-w-[19rem] text-sm leading-relaxed text-latte/75">
-            Un mot suffit pour ouvrir. Tu le connais déjà.
+            One word opens it. You already know it.
           </p>
 
           <form onSubmit={submit} className="space-y-4">
@@ -163,8 +163,8 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
                     setValue(event.target.value);
                     setError(false);
                   }}
-                  placeholder="Le mot de passe"
-                  aria-label="Mot de passe"
+                  placeholder="The password"
+                  aria-label="Password"
                   aria-invalid={error}
                   className={`field pl-11 text-center tracking-[0.2em] ${
                     error ? 'border-carminClair/70' : ''
@@ -182,14 +182,14 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
                   className="text-xs text-carminClair"
                   role="alert"
                 >
-                  Ce n&apos;est pas ça. Essaie encore, prends ton temps.
+                  That&apos;s not it. Try again, take your time.
                 </motion.p>
               )}
             </AnimatePresence>
 
             <button type="submit" disabled={checking || !value.trim()} className="btn-gold w-full">
               {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              {checking ? 'Un instant…' : 'Ouvrir'}
+              {checking ? 'One moment…' : 'Open'}
             </button>
           </form>
 
@@ -201,7 +201,7 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
               aria-expanded={showHint}
             >
               <Lightbulb className="h-3.5 w-3.5" />
-              {showHint ? "Cacher l'indice" : 'Un indice ?'}
+              {showHint ? 'Hide the hint' : 'Need a hint?'}
             </button>
 
             <AnimatePresence>
@@ -213,7 +213,7 @@ export default function PasswordGate({ hint, onUnlocked }: PasswordGateProps) {
                   transition={{ duration: 0.4 }}
                   className="mx-auto mt-4 max-w-[17rem] font-serif text-sm italic leading-relaxed text-creme/80"
                 >
-                  « {hint} »
+                  “{hint}”
                 </motion.p>
               )}
             </AnimatePresence>

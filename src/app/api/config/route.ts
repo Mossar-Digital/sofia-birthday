@@ -6,7 +6,7 @@ import { readConfig, toPublicConfig, writeConfig } from '@/lib/store';
 
 export const dynamic = 'force-dynamic';
 
-/** Config publique — sans le mot de passe. Le studio reçoit tout. */
+/** Public config — password stripped. The studio receives everything. */
 export async function GET() {
   const { config, backend } = await readConfig();
   const admin = await isAuthenticated();
@@ -18,19 +18,19 @@ export async function GET() {
 
 export async function POST(request: Request) {
   if (!(await isAuthenticated())) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    return NextResponse.json({ error: 'Not authorised' }, { status: 401 });
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: 'JSON invalide' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
   const incoming = mergeConfig((body as { config?: unknown })?.config ?? body);
 
-  // Un mot de passe vide verrouillerait Sofia dehors : on garde l'ancien.
+  // An empty password would lock her out: keep the previous one.
   if (!incoming.password.trim()) {
     const { config: current } = await readConfig();
     incoming.password = current.password;

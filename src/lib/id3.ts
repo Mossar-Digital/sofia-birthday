@@ -4,7 +4,7 @@ export interface ExtractedTags {
   title: string | null;
   artist: string | null;
   album: string | null;
-  /** Pochette en data URL, si le MP3 en contient une. */
+  /** Artwork as a data URL, when the MP3 carries one. */
   cover: string | null;
 }
 
@@ -12,7 +12,7 @@ const EMPTY: ExtractedTags = { title: null, artist: null, album: null, cover: nu
 
 function clean(value: unknown): string | null {
   if (typeof value !== 'string') return null;
-  // Les tags ID3 traînent souvent des octets nuls en fin de chaîne.
+  // ID3 tags often trail null bytes at the end of a string.
   const trimmed = value.replace(/\u0000/g, '').trim();
   return trimmed.length ? trimmed : null;
 }
@@ -22,8 +22,8 @@ function pictureToDataUrl(picture: { format?: string; data?: number[] } | undefi
 
   const bytes = new Uint8Array(picture.data);
   let binary = '';
-  // Par tranches : une pochette fait souvent plusieurs centaines de ko et
-  // String.fromCharCode(...bytes) ferait exploser la pile d'appels.
+  // In chunks: artwork often runs to several hundred KB and
+  // String.fromCharCode(...bytes) would blow the call stack.
   const CHUNK = 8192;
   for (let i = 0; i < bytes.length; i += CHUNK) {
     binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
@@ -34,16 +34,16 @@ function pictureToDataUrl(picture: { format?: string; data?: number[] } | undefi
 }
 
 /**
- * Lit les tags ID3 d'un MP3 côté navigateur via jsmediatags.
- * Ne rejette jamais : un MP3 sans tags renvoie simplement des champs nuls,
- * l'admin complète alors à la main.
+ * Reads a MP3's ID3 tags in the browser via jsmediatags.
+ * Never rejects: an untagged MP3 simply returns null fields, and the admin
+ * fills them in by hand.
  */
 export async function readAudioTags(file: File): Promise<ExtractedTags> {
   try {
     const jsmediatags = (await import('jsmediatags/dist/jsmediatags.min.js')).default;
 
     return await new Promise<ExtractedTags>((resolve) => {
-      // Garde-fou : un fichier corrompu peut ne déclencher aucun callback.
+      // Guard: a corrupt file may never fire either callback.
       const timeout = setTimeout(() => resolve(EMPTY), 10_000);
 
       jsmediatags.read(file, {
@@ -67,7 +67,7 @@ export async function readAudioTags(file: File): Promise<ExtractedTags> {
   }
 }
 
-/** Devine un titre lisible depuis le nom de fichier, quand les tags manquent. */
+/** Guesses a readable title from the filename when tags are missing. */
 export function guessTitleFromFilename(name: string): string {
   return name
     .replace(/\.[^.]+$/, '')

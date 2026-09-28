@@ -6,12 +6,12 @@ interface AudioContextValue {
   bgmAvailable: boolean;
   bgmPlaying: boolean;
   toggleBgm: () => void;
-  /** Lance la musique de fond en fondu — appelé au déverrouillage. */
+  /** Fades the background music in — called once the gate opens. */
   fadeInBgm: () => void;
   currentSongId: string | null;
   playSong: (id: string, url: string) => void;
   pauseSong: () => void;
-  /** Progression 0 → 1 du morceau en cours, pour le bras de la platine. */
+  /** Progress 0 → 1 of the current track, used by the tonearm. */
   songProgress: number;
 }
 
@@ -22,7 +22,7 @@ const FADE_STEP_MS = 90;
 
 export function useSiteAudio(): AudioContextValue {
   const context = useContext(AudioCtx);
-  if (!context) throw new Error('useSiteAudio doit être utilisé dans <AudioProvider>');
+  if (!context) throw new Error('useSiteAudio must be used inside <AudioProvider>');
   return context;
 }
 
@@ -48,7 +48,7 @@ export default function AudioProvider({
     }
   }, []);
 
-  /** Monte ou descend le volume par paliers, puis exécute `onDone`. */
+  /** Ramps the volume in steps, then runs `onDone`. */
   const fadeTo = useCallback(
     (target: number, onDone?: () => void) => {
       const audio = bgmRef.current;
@@ -68,7 +68,7 @@ export default function AudioProvider({
     [clearFade],
   );
 
-  // (Re)crée l'élément audio de fond quand l'URL change.
+  // (Re)creates the background audio element when the URL changes.
   useEffect(() => {
     if (!bgmUrl) {
       bgmRef.current?.pause();
@@ -102,8 +102,8 @@ export default function AudioProvider({
         setBgmPlaying(true);
         fadeTo(BGM_VOLUME);
       })
-      // Le navigateur peut refuser la lecture automatique : le bouton flottant
-      // reste disponible, on n'affiche pas d'erreur à Sofia.
+      // The browser may refuse autoplay: the floating button is still there,
+      // so we show no error.
       .catch(() => setBgmPlaying(false));
   }, [currentSongId, fadeTo]);
 
@@ -117,7 +117,7 @@ export default function AudioProvider({
         setBgmPlaying(false);
       });
     } else {
-      // Un morceau du Top 3 a la priorité sur la musique d'ambiance.
+      // A track from the list takes priority over the background music.
       songRef.current?.pause();
       setCurrentSongId(null);
       audio.volume = 0;
@@ -143,7 +143,7 @@ export default function AudioProvider({
         return;
       }
 
-      // On baisse l'ambiance avant de lancer le morceau.
+      // Duck the ambience before starting the track.
       const bgm = bgmRef.current;
       if (bgm && bgmPlaying) {
         fadeTo(0, () => {

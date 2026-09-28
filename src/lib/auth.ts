@@ -23,14 +23,14 @@ function safeEqual(a: string, b: string): boolean {
   return timingSafeEqual(bufA, bufB);
 }
 
-/** Compare la clé saisie à ADMIN_SECRET_KEY, en temps constant. */
+/** Compares the supplied key with ADMIN_SECRET_KEY, in constant time. */
 export function verifyAdminKey(candidate: string): boolean {
   const secret = adminSecret();
   if (!secret) return false;
   return safeEqual(candidate, secret);
 }
 
-/** Jeton `expiration.signature` — inutilisable sans ADMIN_SECRET_KEY. */
+/** `expiry.signature` token — useless without ADMIN_SECRET_KEY. */
 export function createSessionToken(): string {
   const expires = Date.now() + SESSION_TTL_MS;
   return `${expires}.${sign(String(expires))}`;
@@ -44,7 +44,7 @@ export function verifySessionToken(token: string | undefined): boolean {
   return safeEqual(signature, sign(expires));
 }
 
-/** À appeler dans les routes d'API : true si la requête vient du studio. */
+/** Call from API routes: true when the request comes from the studio. */
 export async function isAuthenticated(): Promise<boolean> {
   const store = await cookies();
   return verifySessionToken(store.get(ADMIN_COOKIE)?.value);

@@ -1,12 +1,12 @@
-export type FlowerKind = 'rose' | 'tournesol' | 'tulipe' | 'pivoine' | 'lavande';
+export type FlowerKind = 'rose' | 'sunflower' | 'tulip';
 
 export interface Flower {
   id: FlowerKind;
-  /** Nom affiché sous la fleur */
+  /** Name shown under the flower */
   name: string;
-  /** Titre du message poétique */
+  /** Heading of the poetic message */
   title: string;
-  /** Le message d'amour lui-même */
+  /** The love note itself */
   message: string;
 }
 
@@ -14,7 +14,7 @@ export interface Photo {
   id: string;
   url: string;
   caption: string;
-  /** Texte libre : « Été 2023 », « 14 février »… */
+  /** Free text: "Summer 2023", "February 14th"… */
   date: string;
 }
 
@@ -22,15 +22,15 @@ export interface Song {
   id: string;
   title: string;
   artist: string;
-  /** Pochette extraite des tags ID3 ou téléversée à la main */
+  /** Artwork pulled from the ID3 tags, or uploaded by hand */
   cover: string | null;
-  /** URL publique du MP3 */
+  /** Public URL of the MP3 */
   audioUrl: string | null;
 }
 
 export interface SiteConfig {
   name: string;
-  /** Mot de passe de l'écran de verrouillage — jamais envoyé au client */
+  /** Lock screen password — never sent to the browser */
   password: string;
   hint: string;
   greeting: string;
@@ -46,11 +46,11 @@ export interface SiteConfig {
   songs: Song[];
   bgm: {
     url: string | null;
-    /** Démarrage automatique en douceur au déverrouillage */
+    /** Fade the background music in once the gate opens */
     enabled: boolean;
   };
   updatedAt: string;
 }
 
-/** Ce que le navigateur de Sofia reçoit : tout, sauf le mot de passe. */
+/** What her browser receives: everything except the password. */
 export type PublicConfig = Omit<SiteConfig, 'password'>;

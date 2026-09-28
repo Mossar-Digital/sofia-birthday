@@ -17,11 +17,11 @@ import type { PublicConfig } from '@/lib/types';
 
 const UNLOCK_KEY = 'sofia:unlocked';
 
-/** Contenu du cadeau, une fois le verrou passé. */
+/** The gift itself, once the gate has been passed. */
 function Unlocked({ config }: { config: PublicConfig }) {
   const { fadeInBgm } = useSiteAudio();
 
-  // Lancement doux de la musique de fond, si l'admin l'a activée.
+  // Gently start the background music, if it was enabled in the studio.
   useEffect(() => {
     if (config.bgm.enabled && config.bgm.url) {
       const timer = setTimeout(fadeInBgm, 500);
@@ -60,7 +60,7 @@ function Unlocked({ config }: { config: PublicConfig }) {
 }
 
 export default function Experience({ config }: { config: PublicConfig }) {
-  // `null` = on ne sait pas encore (évite un flash du verrou au rechargement).
+  // `null` = not known yet (avoids a flash of the gate on reload).
   const [unlocked, setUnlocked] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function Experience({ config }: { config: PublicConfig }) {
     try {
       window.sessionStorage.setItem(UNLOCK_KEY, '1');
     } catch {
-      // Navigation privée : le verrou reviendra au prochain chargement, sans gravité.
+      // Private browsing: the gate returns on next load, which is harmless.
     }
     setUnlocked(true);
   }, []);

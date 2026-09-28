@@ -38,8 +38,8 @@ export default function PhotosTab({ photos, onChange }: PhotosTabProps) {
         added.push({ id: newId(), url, caption: '', date: '' });
       } catch (uploadError) {
         setError(
-          `« ${file.name} » : ${
-            uploadError instanceof Error ? uploadError.message : 'téléversement impossible'
+          `“${file.name}”: ${
+            uploadError instanceof Error ? uploadError.message : 'upload failed'
           }`,
         );
       }
@@ -59,7 +59,7 @@ export default function PhotosTab({ photos, onChange }: PhotosTabProps) {
     onChange(photos.filter((photo) => photo.id !== id));
   }
 
-  /** Déplace une photo d'un cran, pour choisir l'ordre de l'album. */
+  /** Moves a photo one slot, to set the order of the album. */
   function move(index: number, direction: -1 | 1) {
     const target = index + direction;
     if (target < 0 || target >= photos.length) return;
@@ -71,8 +71,8 @@ export default function PhotosTab({ photos, onChange }: PhotosTabProps) {
   return (
     <div className="space-y-5">
       <Card
-        title="Galerie souvenirs"
-        description="Les photos apparaissent en Polaroid, dans cet ordre. Légende et date sont libres."
+        title="Memory gallery"
+        description="Photos show up as Polaroids, in this order. Caption and date are free text."
       >
         <input
           ref={inputRef}
@@ -92,14 +92,14 @@ export default function PhotosTab({ photos, onChange }: PhotosTabProps) {
           {busy ? (
             <>
               <Spinner className="h-5 w-5 text-dore" />
-              <span className="text-sm text-creme/85">Téléversement… {progress}</span>
+              <span className="text-sm text-creme/85">Uploading… {progress}</span>
             </>
           ) : (
             <>
               <ImagePlus className="h-6 w-6 text-dore/70" strokeWidth={1.6} />
-              <span className="text-sm text-creme/85">Ajouter des photos</span>
+              <span className="text-sm text-creme/85">Add photos</span>
               <span className="text-[11px] text-latte/50">
-                Plusieurs fichiers à la fois, formats image
+Several files at once, any image format
               </span>
             </>
           )}
@@ -131,13 +131,13 @@ export default function PhotosTab({ photos, onChange }: PhotosTabProps) {
                   <input
                     value={photo.caption}
                     onChange={(event) => update(photo.id, { caption: event.target.value })}
-                    placeholder="Légende…"
+                    placeholder="Caption…"
                     className="w-full rounded-lg border border-dore/20 bg-cacao/40 px-3 py-2 text-sm text-creme placeholder:text-latte/40 focus:border-dore/50"
                   />
                   <input
                     value={photo.date}
                     onChange={(event) => update(photo.id, { date: event.target.value })}
-                    placeholder="Date — « Été 2023 », « 14 février »…"
+                    placeholder="Date — “Summer 2023”, “February 14th”…"
                     className="w-full rounded-lg border border-dore/20 bg-cacao/40 px-3 py-2 text-xs text-latte/85 placeholder:text-latte/40 focus:border-dore/50"
                   />
                 </div>
@@ -147,7 +147,7 @@ export default function PhotosTab({ photos, onChange }: PhotosTabProps) {
                     type="button"
                     onClick={() => move(index, -1)}
                     disabled={index === 0}
-                    aria-label="Monter"
+                    aria-label="Move up"
                     className="flex h-7 w-7 items-center justify-center rounded-md text-latte/60 transition hover:bg-dore/10 hover:text-dore disabled:opacity-25"
                   >
                     <ArrowUp className="h-3.5 w-3.5" />
@@ -156,7 +156,7 @@ export default function PhotosTab({ photos, onChange }: PhotosTabProps) {
                     type="button"
                     onClick={() => move(index, 1)}
                     disabled={index === photos.length - 1}
-                    aria-label="Descendre"
+                    aria-label="Move down"
                     className="flex h-7 w-7 items-center justify-center rounded-md text-latte/60 transition hover:bg-dore/10 hover:text-dore disabled:opacity-25"
                   >
                     <ArrowDown className="h-3.5 w-3.5" />
@@ -164,7 +164,7 @@ export default function PhotosTab({ photos, onChange }: PhotosTabProps) {
                   <button
                     type="button"
                     onClick={() => remove(photo.id)}
-                    aria-label="Supprimer"
+                    aria-label="Delete"
                     className="flex h-7 w-7 items-center justify-center rounded-md text-carminClair/70 transition hover:bg-carmin/15 hover:text-carminClair"
                   >
                     <Trash2 className="h-3.5 w-3.5" />

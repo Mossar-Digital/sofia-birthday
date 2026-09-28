@@ -11,7 +11,7 @@ interface LoveLetterProps {
   name: string;
 }
 
-/** Sceau de cire : disque carmin bombé, initiale gravée, bords irréguliers. */
+/** Wax seal: domed carmine disc, pressed initial, deliberately uneven edge. */
 function WaxSeal({ initial, onClick, broken }: { initial: string; onClick: () => void; broken: boolean }) {
   return (
     <motion.button
@@ -19,7 +19,7 @@ function WaxSeal({ initial, onClick, broken }: { initial: string; onClick: () =>
       onClick={onClick}
       className="group relative block"
       whileTap={{ scale: 0.92 }}
-      aria-label={broken ? 'Refermer la lettre' : 'Ouvrir la lettre'}
+      aria-label={broken ? 'Close the letter' : 'Open the letter'}
     >
       <motion.span
         className="absolute inset-0 -z-10 scale-[1.55] rounded-full bg-carmin/35 blur-xl"
@@ -35,7 +35,7 @@ function WaxSeal({ initial, onClick, broken }: { initial: string; onClick: () =>
             <stop offset="100%" stopColor="#6B161D" />
           </radialGradient>
         </defs>
-        {/* Contour volontairement bosselé, comme de la cire pressée à la main */}
+        {/* Lumpy outline on purpose, like wax pressed by hand */}
         <path
           d="M50 6 C62 6 70 12 76 18 C84 25 94 32 94 46 C94 60 86 66 80 74 C74 82 66 94 50 94 C34 94 26 82 20 74 C14 66 6 60 6 46 C6 32 16 25 24 18 C30 12 38 6 50 6 Z"
           fill="url(#wax)"
@@ -66,9 +66,9 @@ export default function LoveLetter({ letter, name }: LoveLetterProps) {
   return (
     <section id="lettre" className="relative px-5 py-20 sm:py-24">
       <SectionTitle
-        overline="La lettre"
-        title="Ce que je voulais te dire"
-        description={open ? undefined : 'Brise le sceau quand tu es prête.'}
+        overline="The letter"
+        title="What I wanted to tell you"
+        description={open ? undefined : 'Break the seal when you are ready.'}
       />
 
       <div className="mx-auto max-w-2xl">
@@ -79,7 +79,7 @@ export default function LoveLetter({ letter, name }: LoveLetterProps) {
           viewport={{ once: true, amount: 0.25 }}
           transition={{ duration: 0.9 }}
         >
-          {/* Le sceau, posé à cheval sur le bord supérieur du parchemin */}
+          {/* The seal, straddling the top edge of the parchment */}
           <div className="relative z-20 flex justify-center">
             <motion.div
               animate={open ? { y: 4, rotate: -13, scale: 0.82 } : { y: 0, rotate: 0, scale: 1 }}
@@ -98,9 +98,9 @@ export default function LoveLetter({ letter, name }: LoveLetterProps) {
             transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
             style={{ boxShadow: '0 30px 70px -30px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(155,43,52,0.12)' }}
           >
-            {/* Bords brûlés : ombres internes très douces */}
+            {/* Softly scorched edges: very gentle inner shadow */}
             <span className="pointer-events-none absolute inset-0 rounded-[1.75rem] shadow-[inset_0_0_60px_rgba(120,74,32,0.22)]" />
-            {/* Pli horizontal du papier */}
+            {/* Horizontal fold in the paper */}
             <span className="pointer-events-none absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent via-noisette/25 to-transparent" />
 
             <h3 className="mb-6 text-center font-script text-3xl text-carmin sm:text-4xl">
@@ -119,7 +119,7 @@ export default function LoveLetter({ letter, name }: LoveLetterProps) {
               {letter.signature}
             </p>
 
-            {/* Voile de fermeture, tant que la lettre est pliée */}
+            {/* Fade-out veil while the letter is still folded */}
             {!open && (
               <motion.button
                 type="button"
@@ -133,7 +133,7 @@ export default function LoveLetter({ letter, name }: LoveLetterProps) {
                 exit={{ opacity: 0 }}
               >
                 <span className="text-[10px] uppercase tracking-[0.28em] text-carmin/70">
-                  Lire la lettre
+                  Read the letter
                 </span>
               </motion.button>
             )}

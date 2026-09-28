@@ -8,15 +8,14 @@ interface ModalProps {
   open: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  /** Largeur maximale du panneau. */
+  /** Maximum width of the panel. */
   className?: string;
   label?: string;
 }
 
 /**
- * Modale mobile-first : arrive du bas sur téléphone, se centre au-delà.
- * Ferme au clic sur le voile et à la touche Échap, et bloque le défilement
- * de la page pendant l'ouverture.
+ * Mobile-first modal: slides up from the bottom on a phone, centres above it.
+ * Closes on backdrop click and on Escape, and locks page scrolling while open.
  */
 export default function Modal({ open, onClose, children, className = '', label }: ModalProps) {
   useEffect(() => {
@@ -48,7 +47,7 @@ export default function Modal({ open, onClose, children, className = '', label }
         >
           <button
             type="button"
-            aria-label="Fermer"
+            aria-label="Close"
             onClick={onClose}
             className="absolute inset-0 cursor-default bg-espresso/80 backdrop-blur-sm"
           />
@@ -66,7 +65,7 @@ export default function Modal({ open, onClose, children, className = '', label }
             <button
               type="button"
               onClick={onClose}
-              aria-label="Fermer"
+              aria-label="Close"
               className="absolute right-3 top-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-espresso/55 text-creme/80 backdrop-blur transition hover:bg-espresso/80 hover:text-creme"
             >
               <X className="h-4 w-4" />

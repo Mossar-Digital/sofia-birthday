@@ -1,13 +1,13 @@
 import Experience from '@/components/public/Experience';
 import { readConfig, toPublicConfig } from '@/lib/store';
 
-// La page reflète immédiatement les changements faits dans le studio.
+// The page reflects studio changes immediately.
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const { config } = await readConfig();
 
-  // Aucune trace de l'administration ici : Sofia ne voit que le cadeau,
-  // et le mot de passe ne quitte jamais le serveur.
+  // No trace of the admin side here: she only ever sees the gift,
+  // and the password never leaves the server.
   return <Experience config={toPublicConfig(config)} />;
 }

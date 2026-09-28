@@ -7,7 +7,7 @@ interface HeroProps {
   subtitle: string;
 }
 
-/** Sépare le message pour animer chaque mot l'un après l'autre. */
+/** Splits the greeting so each word can animate in on its own. */
 function words(text: string): string[] {
   return text.trim().split(/\s+/);
 }
@@ -23,11 +23,11 @@ export default function Hero({ greeting, subtitle }: HeroProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 0.15 }}
       >
-        Aujourd&apos;hui, c&apos;est ton jour
+        Today is your day
       </motion.p>
 
-      {/* Le titre est découpé en mots pour l'animation ; `aria-label` garde
-          une phrase lisible pour les lecteurs d'écran et à la copie. */}
+      {/* The title is split into words for the animation; `aria-label` keeps
+          one readable sentence for screen readers and for copy-paste. */}
       <h1
         aria-label={greeting}
         className="heading-serif mb-7 text-[2.65rem] leading-[1.06] sm:text-6xl md:text-7xl"
@@ -50,7 +50,7 @@ export default function Hero({ greeting, subtitle }: HeroProps) {
         ))}
       </h1>
 
-      {/* Filet doré avec un losange au centre */}
+      {/* Gold rule with a small diamond at its centre */}
       <motion.div
         className="mb-7 flex items-center gap-3"
         initial={{ opacity: 0, scaleX: 0.3 }}
@@ -71,7 +71,7 @@ export default function Hero({ greeting, subtitle }: HeroProps) {
         {subtitle}
       </motion.p>
 
-      {/* Invitation à faire défiler */}
+      {/* Nudge to scroll */}
       <motion.div
         className="absolute bottom-9 left-1/2 -translate-x-1/2"
         initial={{ opacity: 0 }}
@@ -83,7 +83,7 @@ export default function Hero({ greeting, subtitle }: HeroProps) {
           animate={{ y: [0, 7, 0] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <span className="text-[9px] uppercase tracking-[0.3em] text-latte/45">Fais défiler</span>
+          <span className="text-[9px] uppercase tracking-[0.3em] text-latte/45">Scroll</span>
           <span className="h-9 w-px bg-gradient-to-b from-dore/55 to-transparent" />
         </motion.div>
       </motion.div>

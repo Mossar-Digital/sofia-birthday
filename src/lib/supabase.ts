@@ -6,14 +6,14 @@ export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
 export const PHOTOS_BUCKET = 'photos';
 export const AUDIO_BUCKET = 'audio';
 
-/** Vrai dès que les deux clés publiques sont renseignées. */
+/** True as soon as both public keys are present. */
 export function isSupabaseConfigured(): boolean {
   return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 }
 
 let browserClient: SupabaseClient | null = null;
 
-/** Client navigateur (clé anon) — utilisé pour les téléversements directs. */
+/** Browser client (anon key) — used for direct uploads. */
 export function getBrowserSupabase(): SupabaseClient | null {
   if (!isSupabaseConfigured()) return null;
   if (!browserClient) {
@@ -25,8 +25,8 @@ export function getBrowserSupabase(): SupabaseClient | null {
 }
 
 /**
- * Client serveur. Utilise la clé `service_role` si elle est disponible
- * (écriture garantie même avec des politiques RLS strictes), sinon la clé anon.
+ * Server client. Uses the `service_role` key when available (writes work
+ * even under strict RLS policies), otherwise the anon key.
  */
 export function getServerSupabase(): SupabaseClient | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';

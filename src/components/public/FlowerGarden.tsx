@@ -20,10 +20,10 @@ export default function FlowerGarden({ flowers, intro }: FlowerGardenProps) {
 
   return (
     <section id="jardin" className="relative px-5 py-20 sm:py-24">
-      <SectionTitle overline="Le jardin" title="Cinq fleurs pour toi" description={intro} />
+      <SectionTitle overline="The garden" title="Three flowers for you" description={intro} />
 
-      {/* Deux colonnes sur mobile, cinq alignées à partir du desktop. */}
-      <ul className="mx-auto grid max-w-4xl grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
+      {/* Two columns on a phone, all three in a row from tablet up. */}
+      <ul className="mx-auto grid max-w-3xl grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-3">
         {flowers.map((flower, index) => {
           const Art = FLOWER_ART[flower.id];
           const isLastOdd = flowers.length % 2 === 1 && index === flowers.length - 1;
@@ -39,9 +39,9 @@ export default function FlowerGarden({ flowers, intro }: FlowerGardenProps) {
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.7, delay: index * 0.09 }}
                 whileTap={{ scale: 0.94 }}
-                aria-label={`${flower.name} — lire le message`}
+                aria-label={`${flower.name} — read the message`}
               >
-                {/* Lueur qui apparaît au survol / à l'appui */}
+                {/* Glow that fades in on hover or press */}
                 <span
                   className="pointer-events-none absolute inset-x-4 bottom-4 top-2 rounded-full opacity-0 blur-2xl transition duration-500 group-hover:opacity-40"
                   style={{ background: FLOWER_ACCENT[flower.id] }}
@@ -64,7 +64,7 @@ export default function FlowerGarden({ flowers, intro }: FlowerGardenProps) {
                   {flower.name}
                 </span>
                 <span className="relative text-[9px] uppercase tracking-[0.2em] text-dore/50 transition group-hover:text-dore/85">
-                  Touche-moi
+                  Touch me
                 </span>
               </motion.button>
             </li>

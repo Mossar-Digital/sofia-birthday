@@ -8,7 +8,7 @@ interface SectionTitleProps {
   description?: string;
 }
 
-/** En-tête de section commun : surtitre doré, titre serif, filet, texte. */
+/** Shared section header: gold overline, serif title, rule, blurb. */
 export default function SectionTitle({ overline, title, description }: SectionTitleProps) {
   return (
     <motion.div

@@ -7,14 +7,14 @@ import { useEffect, useState } from 'react';
 import { useSiteAudio } from '@/components/public/AudioProvider';
 
 /**
- * Bouton flottant de musique d'ambiance. Discret, en bas à droite,
- * au-dessus de la zone sûre des téléphones.
+ * Floating background-music button. Discreet, bottom right,
+ * clear of the safe area on phones.
  */
 export default function BgmToggle() {
   const { bgmAvailable, bgmPlaying, toggleBgm } = useSiteAudio();
   const [showLabel, setShowLabel] = useState(false);
 
-  // La première fois, une étiquette explique le bouton puis s'effface.
+  // On first load a small label explains the button, then fades away.
   useEffect(() => {
     if (!bgmAvailable) return;
     const appear = setTimeout(() => setShowLabel(true), 2600);
@@ -37,7 +37,7 @@ export default function BgmToggle() {
             exit={{ opacity: 0, x: 10, scale: 0.94 }}
             className="rounded-full border border-dore/25 bg-cacao/90 px-3.5 py-2 text-[10px] uppercase tracking-[0.18em] text-creme/80 backdrop-blur"
           >
-            {bgmPlaying ? 'La musique joue' : 'Musique coupée'}
+            {bgmPlaying ? 'Music is playing' : 'Music is off'}
           </motion.span>
         )}
       </AnimatePresence>
@@ -51,10 +51,10 @@ export default function BgmToggle() {
         className="relative flex items-center justify-center rounded-full border border-dore/35 bg-cacao/85 text-dore shadow-warm backdrop-blur-md"
         style={{ height: 52, width: 52 }}
         whileTap={{ scale: 0.9 }}
-        aria-label={bgmPlaying ? "Couper la musique d'ambiance" : "Relancer la musique d'ambiance"}
+        aria-label={bgmPlaying ? 'Turn the background music off' : 'Turn the background music on'}
         aria-pressed={bgmPlaying}
       >
-        {/* Ondes qui pulsent doucement pendant la lecture */}
+        {/* Ring that pulses gently while playing */}
         <AnimatePresence>
           {bgmPlaying && (
             <motion.span

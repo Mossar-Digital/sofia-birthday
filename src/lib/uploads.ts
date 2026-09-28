@@ -20,14 +20,14 @@ function slug(name: string): string {
     .replace(/^-+|-+$/g, '')
     .slice(0, 40)
     .toLowerCase();
-  return `${Date.now()}-${base || 'fichier'}${ext}`;
+  return `${Date.now()}-${base || 'file'}${ext}`;
 }
 
 /**
- * Téléverse un fichier et renvoie son URL publique.
+ * Uploads a file and returns its public URL.
  *
- * Supabase configuré  → envoi direct navigateur → Storage (pas de limite de 4,5 Mo).
- * Sinon               → repli sur /api/upload, qui écrit dans public/uploads (dev).
+ * Supabase configured → browser uploads straight to Storage (no 4.5 MB cap).
+ * Otherwise           → falls back to /api/upload, writing to public/uploads (dev).
  */
 export async function uploadAsset(file: File, kind: AssetKind): Promise<string> {
   const supabase = getBrowserSupabase();
@@ -51,16 +51,16 @@ export async function uploadAsset(file: File, kind: AssetKind): Promise<string> 
 
   const response = await fetch('/api/upload', { method: 'POST', body: form });
   const payload = (await response.json()) as { url?: string; error?: string };
-  if (!response.ok || !payload.url) throw new Error(payload.error ?? 'Téléversement impossible');
+  if (!response.ok || !payload.url) throw new Error(payload.error ?? 'Upload failed');
   return payload.url;
 }
 
-/** Convertit un fichier en data URL — utilisé pour les pochettes légères. */
+/** Turns a file into a data URL — used for lightweight artwork. */
 export function fileToDataUrl(file: File | Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(String(reader.result));
-    reader.onerror = () => reject(new Error('Lecture du fichier impossible'));
+    reader.onerror = () => reject(new Error('Could not read the file'));
     reader.readAsDataURL(file);
   });
 }

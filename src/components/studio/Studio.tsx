@@ -19,7 +19,7 @@ export default function Studio() {
   const [config, setConfig] = useState<SiteConfig | null>(null);
   const [backend, setBackend] = useState<StoreBackend>('file');
 
-  /** La config complète (mot de passe inclus) n'est servie qu'aux sessions admin. */
+  /** The full config (password included) is only served to admin sessions. */
   const loadConfig = useCallback(async () => {
     const response = await fetch('/api/config', { cache: 'no-store' });
     const payload = (await response.json()) as { config?: unknown; backend?: StoreBackend };

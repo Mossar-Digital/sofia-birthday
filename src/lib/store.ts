@@ -11,7 +11,7 @@ const FILE_PATH = path.join(process.cwd(), '.data', 'config.json');
 
 export type StoreBackend = 'supabase' | 'file' | 'memory';
 
-/** Dernier recours : survit le temps d'une instance serveur. */
+/** Last resort: survives for the lifetime of one server instance. */
 let memoryConfig: SiteConfig | null = null;
 
 function isReadOnlyFsError(error: unknown): boolean {
@@ -34,19 +34,19 @@ async function writeToFile(config: SiteConfig): Promise<boolean> {
     await fs.writeFile(FILE_PATH, JSON.stringify(config, null, 2), 'utf8');
     return true;
   } catch (error) {
-    if (!isReadOnlyFsError(error)) console.error('[store] écriture fichier impossible', error);
+    if (!isReadOnlyFsError(error)) console.error('[store] could not write file', error);
     return false;
   }
 }
 
-/** Lit la configuration complète (mot de passe inclus — usage serveur seulement). */
+/** Reads the full config (password included — server use only). */
 export async function readConfig(): Promise<{ config: SiteConfig; backend: StoreBackend }> {
   const supabase = getServerSupabase();
 
   if (supabase) {
     const { data, error } = await supabase.from(TABLE).select('data').eq('id', ROW_ID).maybeSingle();
     if (!error && data?.data) return { config: mergeConfig(data.data), backend: 'supabase' };
-    if (error) console.warn('[store] Supabase indisponible, repli local :', error.message);
+    if (error) console.warn('[store] Supabase unavailable, falling back locally:', error.message);
     else return { config: DEFAULT_CONFIG, backend: 'supabase' };
   }
 
@@ -56,7 +56,7 @@ export async function readConfig(): Promise<{ config: SiteConfig; backend: Store
   return { config: DEFAULT_CONFIG, backend: supabase ? 'supabase' : 'file' };
 }
 
-/** Enregistre la configuration et renvoie le support réellement utilisé. */
+/** Saves the config and reports which backend actually took it. */
 export async function writeConfig(next: SiteConfig): Promise<{ config: SiteConfig; backend: StoreBackend }> {
   const config: SiteConfig = { ...next, updatedAt: new Date().toISOString() };
   const supabase = getServerSupabase();
@@ -66,7 +66,7 @@ export async function writeConfig(next: SiteConfig): Promise<{ config: SiteConfi
       .from(TABLE)
       .upsert({ id: ROW_ID, data: config, updated_at: config.updatedAt }, { onConflict: 'id' });
     if (!error) return { config, backend: 'supabase' };
-    console.warn('[store] écriture Supabase refusée, repli local :', error.message);
+    console.warn('[store] Supabase write refused, falling back locally:', error.message);
   }
 
   if (await writeToFile(config)) return { config, backend: 'file' };
@@ -75,7 +75,7 @@ export async function writeConfig(next: SiteConfig): Promise<{ config: SiteConfi
   return { config, backend: 'memory' };
 }
 
-/** Retire le mot de passe avant d'envoyer quoi que ce soit au navigateur. */
+/** Strips the password before anything is sent to the browser. */
 export function toPublicConfig(config: SiteConfig): PublicConfig {
   const { password: _password, ...rest } = config;
   return rest;

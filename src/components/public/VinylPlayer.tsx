@@ -11,11 +11,11 @@ interface VinylPlayerProps {
   songs: Song[];
 }
 
-/** Le disque : sillons concentriques, étiquette centrale ou pochette. */
+/** The record: concentric grooves, centre label or album art. */
 function Record({ cover, spinning }: { cover: string | null; spinning: boolean }) {
   return (
     <div className="relative aspect-square w-full">
-      {/* Sillons */}
+      {/* Grooves */}
       <motion.div
         className="absolute inset-0 rounded-full"
         style={{
@@ -30,7 +30,7 @@ function Record({ cover, spinning }: { cover: string | null; spinning: boolean }
             : { duration: 0.6, ease: 'easeOut' }
         }
       >
-        {/* Reflet fixe qui balaie le vinyle */}
+        {/* Fixed highlight sweeping across the vinyl */}
         <span
           className="pointer-events-none absolute inset-0 rounded-full opacity-45"
           style={{
@@ -39,7 +39,7 @@ function Record({ cover, spinning }: { cover: string | null; spinning: boolean }
           }}
         />
 
-        {/* Étiquette centrale : la pochette extraite du MP3 */}
+        {/* Centre label: the artwork pulled from the MP3 */}
         <div className="absolute inset-[30%] overflow-hidden rounded-full ring-2 ring-espresso/70">
           {cover ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -51,7 +51,7 @@ function Record({ cover, spinning }: { cover: string | null; spinning: boolean }
           )}
         </div>
 
-        {/* Trou central */}
+        {/* Spindle hole */}
         <span className="absolute left-1/2 top-1/2 h-[4.5%] w-[4.5%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-espresso ring-1 ring-black/60" />
       </motion.div>
     </div>
@@ -68,13 +68,13 @@ export default function VinylPlayer({ songs }: VinylPlayerProps) {
   return (
     <section id="chansons" className="relative px-5 py-20 sm:py-24">
       <SectionTitle
-        overline="Le top 3"
-        title="Nos chansons"
-        description="Les trois morceaux qui te ressemblent le plus. Pose l'aiguille."
+        overline="The top 3"
+        title="Our songs"
+        description="The three tracks that sound the most like you. Drop the needle."
       />
 
       <div className="mx-auto max-w-2xl">
-        {/* La platine */}
+        {/* The turntable */}
         <motion.div
           className="grain relative overflow-hidden rounded-[1.75rem] border border-dore/20 bg-gradient-to-b from-moka/70 to-cacao/90 p-6 shadow-warm sm:p-8"
           initial={{ opacity: 0, y: 28 }}
@@ -85,30 +85,31 @@ export default function VinylPlayer({ songs }: VinylPlayerProps) {
           <div className="relative mx-auto max-w-[17rem]">
             <Record cover={current?.cover ?? null} spinning={spinning} />
 
-            {/* Bras de lecture : pivote vers le disque à la lecture, puis
-                progresse lentement vers le centre avec le morceau. */}
+            {/* Tonearm: swings onto the record when playing, then creeps
+                slowly toward the centre as the track advances. */}
             <motion.div
               className="absolute -right-2 -top-3 origin-top-right sm:-right-4"
               animate={{ rotate: spinning ? 20 + songProgress * 12 : -6 }}
               transition={{ type: 'spring', damping: 20, stiffness: 90 }}
             >
-              {/* Hauteur en pixels : le parent est en position absolue et n'a
-                  pas de hauteur propre, un pourcentage ne résoudrait rien. */}
+              {/* Height in pixels: the parent is absolutely positioned with no
+                  height of its own, so a percentage would resolve to nothing. */}
               <svg viewBox="0 0 40 150" className="h-44 w-auto sm:h-52">
                 {/* Pivot */}
+
                 <circle cx="30" cy="12" r="9" fill="#3A2412" stroke="#C8A34C" strokeWidth="1" opacity="0.95" />
                 <circle cx="30" cy="12" r="3.5" fill="#C8A34C" opacity="0.8" />
-                {/* Tube */}
+                {/* Arm tube */}
                 <rect x="27" y="12" width="4" height="106" rx="2" fill="#8C7A5E" />
                 <rect x="28.2" y="12" width="1.2" height="106" fill="#D8C9A6" opacity="0.6" />
-                {/* Cellule et pointe */}
+                {/* Cartridge and stylus */}
                 <path d="M22 116 h14 v14 l-7 8 -7 -8 Z" fill="#2B1A0C" stroke="#C8A34C" strokeWidth="0.8" />
                 <circle cx="29" cy="134" r="1.6" fill="#E6C879" />
               </svg>
             </motion.div>
           </div>
 
-          {/* Étiquette du morceau en cours */}
+          {/* Label for the track currently playing */}
           <div className="mt-7 flex min-h-[3.25rem] items-center justify-center gap-3 text-center">
             {current ? (
               <motion.div
@@ -124,13 +125,13 @@ export default function VinylPlayer({ songs }: VinylPlayerProps) {
               </motion.div>
             ) : (
               <p className="text-xs uppercase tracking-[0.24em] text-latte/45">
-                {playable.length ? 'Choisis un morceau' : 'Aucun morceau pour le moment'}
+                {playable.length ? 'Pick a track' : 'No tracks yet'}
               </p>
             )}
           </div>
         </motion.div>
 
-        {/* Les trois pistes */}
+        {/* The three tracks */}
         <ul className="mt-5 space-y-3">
           {songs.map((song, index) => {
             const isCurrent = song.id === currentSongId;
@@ -158,7 +159,7 @@ export default function VinylPlayer({ songs }: VinylPlayerProps) {
                     {index + 1}
                   </span>
 
-                  {/* Vignette de pochette */}
+                  {/* Artwork thumbnail */}
                   <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-moka/60 ring-1 ring-dore/20">
                     {song.cover ? (
                       // eslint-disable-next-line @next/next/no-img-element

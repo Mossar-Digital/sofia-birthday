@@ -4,7 +4,7 @@ import { ADMIN_COOKIE, createSessionToken, isAdminConfigured, isAuthenticated, v
 
 export const dynamic = 'force-dynamic';
 
-/** État de la session — le studio l'interroge au chargement. */
+/** Session state — the studio asks for this on load. */
 export async function GET() {
   return NextResponse.json(
     { authenticated: await isAuthenticated(), configured: isAdminConfigured() },
@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: Request) {
   if (!isAdminConfigured()) {
     return NextResponse.json(
-      { error: "ADMIN_SECRET_KEY n'est pas défini. Ajoutez-le dans .env.local puis relancez le serveur." },
+      { error: 'ADMIN_SECRET_KEY is not set. Add it to .env.local, then restart the server.' },
       { status: 500 },
     );
   }
@@ -25,12 +25,12 @@ export async function POST(request: Request) {
     const body = (await request.json()) as { key?: unknown };
     key = typeof body.key === 'string' ? body.key : '';
   } catch {
-    return NextResponse.json({ error: 'Requête invalide' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
 
   if (!verifyAdminKey(key)) {
     await new Promise((resolve) => setTimeout(resolve, 800));
-    return NextResponse.json({ error: 'Clé administrateur incorrecte' }, { status: 401 });
+    return NextResponse.json({ error: 'Incorrect admin key' }, { status: 401 });
   }
 
   const response = NextResponse.json({ authenticated: true });

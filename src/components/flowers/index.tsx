@@ -10,7 +10,7 @@ const STEM = '#4E6B3A';
 const STEM_DARK = '#3C5430';
 const LEAF = '#5C7C42';
 
-/** Tige commune, dessinée avant les pétales pour passer dessous. */
+/** Shared stem, drawn before the petals so it sits behind them. */
 function Stem({ leftLeaf = true, rightLeaf = true }: { leftLeaf?: boolean; rightLeaf?: boolean }) {
   return (
     <g>
@@ -29,7 +29,7 @@ function Rose({ className }: FlowerProps) {
   return (
     <svg viewBox="0 0 100 130" className={className} role="presentation">
       <Stem />
-      {/* Pétales extérieurs, puis la spirale du cœur */}
+      {/* Outer petals first, then the spiral at the heart */}
       <g>
         <ellipse cx="50" cy="38" rx="26" ry="24" fill="#8E2029" />
         <path d="M24 38 Q30 16 50 14 Q46 30 42 40 Z" fill="#A82B35" />
@@ -50,8 +50,8 @@ function Rose({ className }: FlowerProps) {
   );
 }
 
-function Tournesol({ className }: FlowerProps) {
-  // 18 pétales générés en cercle : un tournesol dessiné à la main serait irrégulier.
+function Sunflower({ className }: FlowerProps) {
+  // 18 petals laid out in a circle — drawing them by hand would look uneven.
   const petals = Array.from({ length: 18 }, (_, i) => (i * 360) / 18);
   return (
     <svg viewBox="0 0 100 130" className={className} role="presentation">
@@ -70,7 +70,7 @@ function Tournesol({ className }: FlowerProps) {
         ))}
         <circle cx="50" cy="38" r="15" fill="#5A3317" />
         <circle cx="50" cy="38" r="11" fill="#40230F" />
-        {/* Grains : spirale de Fermat, comme sur un vrai capitule */}
+        {/* Seeds on a Fermat spiral, the way a real seed head grows */}
         {Array.from({ length: 26 }, (_, i) => {
           const t = i * 2.39996;
           const r = 1.9 * Math.sqrt(i);
@@ -89,15 +89,15 @@ function Tournesol({ className }: FlowerProps) {
   );
 }
 
-function Tulipe({ className }: FlowerProps) {
+function Tulip({ className }: FlowerProps) {
   return (
     <svg viewBox="0 0 100 130" className={className} role="presentation">
       <path d="M50 54 Q52 90 50 124" stroke={STEM} strokeWidth="3.4" fill="none" strokeLinecap="round" />
       <path d="M50 84 Q30 74 22 92 Q36 104 50 92 Z" fill={LEAF} />
       <path d="M50 100 Q70 92 77 110 Q62 120 50 108 Z" fill={STEM_DARK} />
       <g>
-        {/* Calice fermé. Les trois lobes se recouvrent largement : sans ce
-            chevauchement, le fond sombre formerait deux fentes dures. */}
+        {/* Closed cup. The three lobes overlap generously — without that,
+            the dark background would show through as two hard slits. */}
         <path d="M30 26 Q28 54 50 64 Q72 54 70 26 Q60 38 50 36 Q40 38 30 26 Z" fill="#B5333F" />
         <path d="M30 26 Q31 12 41 7 Q40 24 48 36 Q37 37 30 26 Z" fill="#C34350" />
         <path d="M70 26 Q69 12 59 7 Q60 24 52 36 Q63 37 70 26 Z" fill="#C34350" />
@@ -108,103 +108,15 @@ function Tulipe({ className }: FlowerProps) {
   );
 }
 
-function Pivoine({ className }: FlowerProps) {
-  const outer = Array.from({ length: 12 }, (_, i) => (i * 360) / 12);
-  const inner = Array.from({ length: 8 }, (_, i) => (i * 360) / 8 + 22);
-  return (
-    <svg viewBox="0 0 100 130" className={className} role="presentation">
-      <Stem />
-      <g>
-        {outer.map((angle) => (
-          <ellipse
-            key={`o-${angle}`}
-            cx="50"
-            cy="21"
-            rx="11"
-            ry="15"
-            fill="#D98C9A"
-            opacity="0.92"
-            transform={`rotate(${angle} 50 38)`}
-          />
-        ))}
-        {inner.map((angle) => (
-          <ellipse
-            key={`i-${angle}`}
-            cx="50"
-            cy="28"
-            rx="8.5"
-            ry="11"
-            fill="#C2687A"
-            transform={`rotate(${angle} 50 38)`}
-          />
-        ))}
-        {/* Cœur froissé, signature de la pivoine */}
-        <circle cx="50" cy="38" r="9" fill="#AD4E61" />
-        <path
-          d="M44 38 Q47 32 50 38 Q53 32 56 38 Q53 44 50 39 Q47 44 44 38 Z"
-          fill="#E8AFB9"
-          opacity="0.85"
-        />
-        <circle cx="50" cy="38" r="2.6" fill="#F2D4A8" />
-      </g>
-    </svg>
-  );
-}
-
-function Lavande({ className }: FlowerProps) {
-  // Trois épis de hauteurs différentes, chacun garni de fleurons alternés.
-  const spikes = [
-    { x: 50, top: 8, h: 44, w: 5.2 },
-    { x: 34, top: 20, h: 34, w: 4.4 },
-    { x: 66, top: 24, h: 30, w: 4.4 },
-  ];
-  return (
-    <svg viewBox="0 0 100 130" className={className} role="presentation">
-      {spikes.map((s) => (
-        <path
-          key={`stem-${s.x}`}
-          d={`M${s.x} ${s.top + s.h} Q${s.x + (50 - s.x) * 0.25} 90 50 124`}
-          stroke={STEM}
-          strokeWidth="2.6"
-          fill="none"
-          strokeLinecap="round"
-        />
-      ))}
-      <path d="M46 92 Q28 84 21 100 Q36 110 48 98 Z" fill={LEAF} />
-      <path d="M54 102 Q72 96 78 112 Q62 120 52 108 Z" fill={STEM_DARK} />
-      {spikes.map((s) =>
-        Array.from({ length: 9 }, (_, i) => {
-          const y = s.top + (i * s.h) / 9;
-          const offset = i % 2 === 0 ? -s.w * 0.72 : s.w * 0.72;
-          return (
-            <ellipse
-              key={`${s.x}-${i}`}
-              cx={s.x + offset}
-              cy={y}
-              rx={s.w * 0.82}
-              ry={s.w * 0.62}
-              fill={i % 3 === 0 ? '#8B6FBF' : i % 3 === 1 ? '#7558A8' : '#9C86CC'}
-            />
-          );
-        }),
-      )}
-    </svg>
-  );
-}
-
 export const FLOWER_ART: Record<FlowerKind, (props: FlowerProps) => React.ReactElement> = {
   rose: Rose,
-  tournesol: Tournesol,
-  tulipe: Tulipe,
-  pivoine: Pivoine,
-  lavande: Lavande,
+  sunflower: Sunflower,
+  tulip: Tulip,
 };
 
-/** Teinte d'accent associée à chaque fleur, utilisée par les modales. */
+/** Accent colour per flower, used by the modal. */
 export const FLOWER_ACCENT: Record<FlowerKind, string> = {
   rose: '#BE3F49',
-  tournesol: '#E0A62F',
-  tulipe: '#C9424E',
-  pivoine: '#D98C9A',
-  lavande: '#8B6FBF',
+  sunflower: '#E0A62F',
+  tulip: '#C9424E',
 };

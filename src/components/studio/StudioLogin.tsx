@@ -35,10 +35,10 @@ export default function StudioLogin({ configured, onAuthenticated }: StudioLogin
         onAuthenticated();
         return;
       }
-      setError(payload.error ?? 'Accès refusé');
+      setError(payload.error ?? 'Access denied');
       setKey('');
     } catch {
-      setError('Le serveur ne répond pas.');
+      setError('The server is not responding.');
     } finally {
       setBusy(false);
     }
@@ -57,7 +57,7 @@ export default function StudioLogin({ configured, onAuthenticated }: StudioLogin
             <Lock className="h-5 w-5 text-dore/85" strokeWidth={1.7} />
           </div>
           <h1 className="heading-serif text-2xl text-creme">Studio</h1>
-          <p className="mt-2 text-xs uppercase tracking-[0.22em] text-latte/50">Accès réservé</p>
+          <p className="mt-2 text-xs uppercase tracking-[0.22em] text-latte/50">Restricted access</p>
         </div>
 
         {!configured && (
@@ -65,10 +65,10 @@ export default function StudioLogin({ configured, onAuthenticated }: StudioLogin
             <Notice tone="warn">
               <span className="mb-1 flex items-center gap-1.5 font-medium">
                 <ShieldAlert className="h-3.5 w-3.5" />
-                Configuration requise
+                Setup required
               </span>
-              Ajoutez <code className="text-dore">ADMIN_SECRET_KEY</code> dans votre fichier{' '}
-              <code className="text-dore">.env.local</code>, puis relancez{' '}
+              Add <code className="text-dore">ADMIN_SECRET_KEY</code> to your{' '}
+              <code className="text-dore">.env.local</code> file, then restart{' '}
               <code className="text-dore">npm run dev</code>.
             </Notice>
           </div>
@@ -82,8 +82,8 @@ export default function StudioLogin({ configured, onAuthenticated }: StudioLogin
               setKey(event.target.value);
               setError(null);
             }}
-            placeholder="Code administrateur"
-            aria-label="Code administrateur"
+            placeholder="Admin key"
+            aria-label="Admin key"
             autoComplete="current-password"
             disabled={!configured}
             className="field text-center tracking-[0.18em]"
@@ -101,7 +101,7 @@ export default function StudioLogin({ configured, onAuthenticated }: StudioLogin
             className="btn-gold w-full"
           >
             {busy && <Spinner />}
-            {busy ? 'Vérification…' : 'Entrer'}
+            {busy ? 'Checking…' : 'Enter'}
           </button>
         </form>
       </motion.div>

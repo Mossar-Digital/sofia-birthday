@@ -1,72 +1,68 @@
-import type { SiteConfig } from './types';
+import type { FlowerKind, SiteConfig } from './types';
+
+/**
+ * Ids used before the garden was translated and trimmed to three flowers.
+ * Without this mapping, a config saved under the old ids would silently lose
+ * its text and fall back to the defaults.
+ */
+const LEGACY_FLOWER_IDS: Record<string, FlowerKind> = {
+  tournesol: 'sunflower',
+  tulipe: 'tulip',
+};
 
 export const DEFAULT_CONFIG: SiteConfig = {
   name: 'Sofia',
   password: 'sofia',
-  hint: "Le prénom que je murmure quand personne n'écoute.",
-  greeting: 'Joyeux Anniversaire Sofia',
-  subtitle: "Un petit jardin que j'ai planté rien que pour toi.",
+  hint: 'The name I whisper when nobody else is listening.',
+  greeting: 'Happy Birthday Sofia',
+  subtitle: 'A little garden I planted just for you.',
   gardenIntro:
-    "Cinq fleurs, cinq choses que je n'arrive jamais à dire assez bien. Touche-les, une par une.",
+    'Three flowers, three things I can never quite say well enough. Touch them, one by one.',
   letter: {
-    title: 'Ma Sofia,',
-    body: `Il y a des matins où je me réveille avant toi, juste pour avoir le temps de réaliser ma chance.
+    title: 'My Sofia,',
+    body: `There are mornings when I wake up before you, just to have a moment to realise how lucky I am.
 
-Tu es arrivée dans ma vie comme la lumière entre deux volets : sans prévenir, et tout d'un coup tout avait une couleur. Je ne savais pas qu'on pouvait s'habituer au bonheur sans jamais s'en lasser.
+You came into my life like light through half-closed shutters: without warning, and suddenly everything had colour. I didn't know you could get used to happiness without ever growing tired of it.
 
-Aujourd'hui tu as un an de plus, et moi j'ai un an de plus à t'aimer. C'est le seul anniversaire que je fête vraiment.
+Today you are a year older, and I am a year deeper in love with you. It's the only birthday I really celebrate.
 
-Je te souhaite tout ce que tu n'oses pas encore demander. Et si tu veux bien, je resterai là pour le voir arriver avec toi.`,
-    signature: 'Pour toujours, à toi.',
+I wish you everything you don't yet dare to ask for. And if you'll have me, I'd like to be there to watch it arrive.`,
+    signature: 'Yours, always.',
   },
   flowers: [
     {
       id: 'rose',
-      name: 'La Rose',
-      title: 'Pour la première fois',
+      name: 'The Rose',
+      title: 'For the first time',
       message:
-        "Je me souviens du jour exact où j'ai su. Tu riais d'une bêtise que j'avais dite sans le vouloir, et j'ai pensé : voilà, c'est ce rire que je veux entendre vieillir. La rose, c'est cette évidence-là. Rouge, entière, sans explication.",
+        "I remember the exact day I knew. You were laughing at something silly I hadn't meant to be funny, and I thought: there it is, that's the laugh I want to hear grow old. The rose is that certainty. Red, whole, needing no explanation.",
     },
     {
-      id: 'tournesol',
-      name: 'Le Tournesol',
-      title: 'Pour ta lumière',
+      id: 'sunflower',
+      name: 'The Sunflower',
+      title: 'For your light',
       message:
-        "Le tournesol passe sa vie à chercher le soleil. Moi je n'ai pas eu à chercher : tu es entrée dans la pièce. Tu as ce don de rendre les jours ordinaires supportables, et les jours difficiles traversables. Merci d'être ma direction.",
+        'A sunflower spends its whole life looking for the sun. I never had to look: you walked into the room. You have this gift of making ordinary days bearable and hard days crossable. Thank you for being my direction.',
     },
     {
-      id: 'tulipe',
-      name: 'La Tulipe',
-      title: 'Pour ta douceur',
+      id: 'tulip',
+      name: 'The Tulip',
+      title: 'For your softness',
       message:
-        "Il y a une tendresse chez toi que tu crois banale et qui me bouleverse : la façon dont tu vérifies que j'ai mangé, dont tu retiens les détails, dont tu pardonnes vite. La tulipe est simple et parfaite. Comme toi, quand tu ne fais pas exprès.",
-    },
-    {
-      id: 'pivoine',
-      name: 'La Pivoine',
-      title: 'Pour ta beauté',
-      message:
-        "La pivoine ne s'ouvre pas à moitié. Elle prend toute la place, et personne ne s'en plaint. Tu es belle d'une manière qui n'a rien à voir avec les miroirs — belle dans la façon dont tu écoutes, dont tu t'emportes, dont tu t'endors sur mon épaule.",
-    },
-    {
-      id: 'lavande',
-      name: 'La Lavande',
-      title: 'Pour notre calme',
-      message:
-        "La lavande, c'est le soir. C'est la maison. C'est le silence confortable à deux, quand on n'a plus rien à prouver. Si je devais choisir un seul endroit au monde, ce serait celui-là : toi, moi, et rien de prévu.",
+        "There's a tenderness in you that you think is nothing special, and it undoes me: the way you check that I've eaten, the way you remember small details, the way you forgive quickly. A tulip is simple and perfect. Like you, when you're not trying.",
     },
   ],
   photos: [],
   songs: [
-    { id: 'song-1', title: 'Notre première chanson', artist: 'À compléter', cover: null, audioUrl: null },
-    { id: 'song-2', title: 'Celle de la voiture', artist: 'À compléter', cover: null, audioUrl: null },
-    { id: 'song-3', title: 'Celle du dernier slow', artist: 'À compléter', cover: null, audioUrl: null },
+    { id: 'song-1', title: 'Our first song', artist: 'To be filled in', cover: null, audioUrl: null },
+    { id: 'song-2', title: 'The one from the car', artist: 'To be filled in', cover: null, audioUrl: null },
+    { id: 'song-3', title: 'The one from the last slow dance', artist: 'To be filled in', cover: null, audioUrl: null },
   ],
   bgm: { url: null, enabled: true },
   updatedAt: new Date(0).toISOString(),
 };
 
-/** Normalise une config partielle (vieille version, JSON incomplet…) */
+/** Normalises a partial config (older version, incomplete JSON…) */
 export function mergeConfig(partial: unknown): SiteConfig {
   const base = structuredClone(DEFAULT_CONFIG);
   if (!partial || typeof partial !== 'object') return base;
@@ -77,9 +73,13 @@ export function mergeConfig(partial: unknown): SiteConfig {
     ...p,
     letter: { ...base.letter, ...(p.letter ?? {}) },
     bgm: { ...base.bgm, ...(p.bgm ?? {}) },
+    // Driven by `base`, so a flower removed from the defaults disappears even
+    // if an older saved config still carries it.
     flowers: base.flowers.map((flower) => {
-      const found = p.flowers?.find((f) => f.id === flower.id);
-      return found ? { ...flower, ...found } : flower;
+      const found = p.flowers?.find(
+        (f) => f.id === flower.id || LEGACY_FLOWER_IDS[f.id] === flower.id,
+      );
+      return found ? { ...flower, ...found, id: flower.id } : flower;
     }),
     photos: Array.isArray(p.photos) ? p.photos.filter((ph) => ph && ph.url) : base.photos,
     songs: base.songs.map((song, i) => {

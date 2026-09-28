@@ -24,9 +24,9 @@ const parisienne = Parisienne({
 });
 
 export const metadata: Metadata = {
-  title: 'Pour toi',
-  description: 'Un cadeau.',
-  // Le cadeau reste privé : pas d'indexation, pas d'aperçu social.
+  title: 'For you',
+  description: 'A gift.',
+  // The gift stays private: no indexing, no social preview.
   robots: { index: false, follow: false },
 };
 
@@ -39,7 +39,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${cormorant.variable} ${jost.variable} ${parisienne.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${jost.variable} ${parisienne.variable}`}>
       <body>{children}</body>
     </html>
   );

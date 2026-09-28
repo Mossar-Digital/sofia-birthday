@@ -4,7 +4,7 @@ import { readConfig } from '@/lib/store';
 
 export const dynamic = 'force-dynamic';
 
-/** Vérifie le mot de passe côté serveur pour ne jamais l'exposer au client. */
+/** Checks the password server-side so it is never exposed to the client. */
 export async function POST(request: Request) {
   let attempt = '';
   try {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   const { config } = await readConfig();
   const ok = attempt.trim().toLowerCase() === config.password.trim().toLowerCase();
 
-  // Petit délai : décourage le forçage sans gêner Sofia.
+  // A small delay: discourages brute force without annoying her.
   if (!ok) await new Promise((resolve) => setTimeout(resolve, 600));
 
   return NextResponse.json({ ok }, { headers: { 'Cache-Control': 'no-store' } });

@@ -27,17 +27,17 @@ import type { SiteConfig } from '@/lib/types';
 type TabId = 'general' | 'fleurs' | 'lettre' | 'galerie' | 'musique';
 
 const TABS: { id: TabId; label: string; icon: typeof Settings2 }[] = [
-  { id: 'general', label: 'Général', icon: Settings2 },
-  { id: 'fleurs', label: 'Fleurs', icon: Flower2 },
-  { id: 'lettre', label: 'Lettre', icon: Mail },
-  { id: 'galerie', label: 'Galerie', icon: ImageIcon },
-  { id: 'musique', label: 'Musique', icon: Music },
+  { id: 'general', label: 'General', icon: Settings2 },
+  { id: 'fleurs', label: 'Flowers', icon: Flower2 },
+  { id: 'lettre', label: 'Letter', icon: Mail },
+  { id: 'galerie', label: 'Gallery', icon: ImageIcon },
+  { id: 'musique', label: 'Music', icon: Music },
 ];
 
 const BACKEND_LABEL: Record<StoreBackend, { text: string; icon: typeof Cloud; tone: string }> = {
   supabase: { text: 'Supabase', icon: Cloud, tone: 'text-dore/75' },
-  file: { text: 'Fichier local', icon: HardDrive, tone: 'text-latte/60' },
-  memory: { text: 'Mémoire seule', icon: TriangleAlert, tone: 'text-carminClair/80' },
+  file: { text: 'Local file', icon: HardDrive, tone: 'text-latte/60' },
+  memory: { text: 'Memory only', icon: TriangleAlert, tone: 'text-carminClair/80' },
 };
 
 interface EditorProps {
@@ -81,7 +81,7 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
       };
 
       if (!response.ok || !payload.config) {
-        setError(payload.error ?? 'Enregistrement impossible');
+        setError(payload.error ?? 'Could not save');
         return;
       }
 
@@ -91,13 +91,13 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
       setJustSaved(true);
       setTimeout(() => setJustSaved(false), 2400);
     } catch {
-      setError('Le serveur ne répond pas.');
+      setError('The server is not responding.');
     } finally {
       setSaving(false);
     }
   }, [config]);
 
-  // Ctrl/⌘ + S enregistre, comme dans un éditeur de texte.
+  // Ctrl/Cmd + S saves, the way a text editor would.
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
@@ -109,7 +109,7 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [dirty, saving, save]);
 
-  // Prévient avant de quitter avec des changements non enregistrés.
+  // Warn before leaving with unsaved changes.
   useEffect(() => {
     if (!dirty) return;
     const onBeforeUnload = (event: BeforeUnloadEvent) => event.preventDefault();
@@ -121,7 +121,7 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
 
   return (
     <div className="min-h-dvh pb-28">
-      {/* Barre supérieure */}
+      {/* Top bar */}
       <header className="sticky top-0 z-30 border-b border-dore/15 bg-espresso/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3.5">
           <div className="min-w-0">
@@ -140,12 +140,12 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
               className="flex h-9 items-center gap-1.5 rounded-full border border-dore/25 px-3 text-[11px] text-creme/80 transition hover:border-dore/55"
             >
               <ExternalLink className="h-3.5 w-3.5" />
-              Voir
+              View
             </a>
             <button
               type="button"
               onClick={onSignOut}
-              aria-label="Se déconnecter"
+              aria-label="Sign out"
               className="flex h-9 w-9 items-center justify-center rounded-full border border-dore/25 text-latte/65 transition hover:border-carminClair/50 hover:text-carminClair"
             >
               <LogOut className="h-3.5 w-3.5" />
@@ -153,7 +153,7 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
           </div>
         </div>
 
-        {/* Onglets, défilables au doigt sur mobile */}
+        {/* Tabs, swipeable on a phone */}
         <nav className="mx-auto max-w-3xl overflow-x-auto no-scrollbar px-4">
           <ul className="flex gap-1 pb-2">
             {TABS.map(({ id, label, icon: Icon }) => (
@@ -184,8 +184,8 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
       <main className="mx-auto max-w-3xl space-y-5 px-4 py-6">
         {backend === 'memory' && (
           <Notice tone="warn">
-            Aucun support de stockage inscriptible : les modifications ne survivront pas au
-            redémarrage du serveur. Renseignez les clés Supabase pour une sauvegarde durable.
+            No writable storage backend: changes will not survive a server restart.
+            Add your Supabase keys for durable saving.
           </Notice>
         )}
 
@@ -200,23 +200,23 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
           >
             {tab === 'general' && (
               <>
-                <Card title="Identité" description="Le prénom apparaît dans le titre et la signature.">
+                <Card title="Identity" description="The name appears in the title and the signature.">
                   <div className="space-y-4">
                     <TextField
-                      label="Prénom"
+                      label="Name"
                       value={config.name}
                       onChange={(name) => patch('name', name)}
                       placeholder="Sofia"
                     />
                     <TextField
-                      label="Message d'anniversaire"
+                      label="Birthday message"
                       value={config.greeting}
                       onChange={(greeting) => patch('greeting', greeting)}
-                      placeholder="Joyeux Anniversaire Sofia"
-                      hint="Chaque mot apparaît l'un après l'autre à l'écran."
+                      placeholder="Happy Birthday Sofia"
+                      hint="Each word fades in one after the other on screen."
                     />
                     <TextArea
-                      label="Sous-titre"
+                      label="Subtitle"
                       value={config.subtitle}
                       onChange={(subtitle) => patch('subtitle', subtitle)}
                       rows={2}
@@ -225,23 +225,23 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
                 </Card>
 
                 <Card
-                  title="Écran de verrouillage"
-                  description="Ce que Sofia doit saisir pour ouvrir le cadeau."
+                  title="Lock screen"
+                  description="What she has to type to open the gift."
                 >
                   <div className="space-y-4">
                     <TextField
-                      label="Mot de passe"
+                      label="Password"
                       value={config.password}
                       onChange={(password) => patch('password', password)}
                       placeholder="sofia"
-                      hint="Insensible aux majuscules et aux espaces autour. Laisser vide conserve l'actuel."
+                      hint="Case and surrounding spaces are ignored. Leave empty to keep the current one."
                     />
                     <TextArea
-                      label="Indice"
+                      label="Hint"
                       value={config.hint}
                       onChange={(hint) => patch('hint', hint)}
                       rows={2}
-                      hint="Consultable au clic sur « Un indice ? »."
+                      hint="Shown when she taps “Need a hint?”."
                     />
                   </div>
                 </Card>
@@ -250,8 +250,8 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
 
             {tab === 'fleurs' && (
               <Card
-                title="Le jardin des 5 fleurs"
-                description="Un message d'amour par fleur, affiché dans une modale au clic."
+                title="The garden of 3 flowers"
+                description="One love note per flower, shown in a modal on tap."
               >
                 <div className="space-y-4">
                   {config.flowers.map((flower, index) => {
@@ -273,7 +273,7 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
                                 ),
                               )
                             }
-                            placeholder="Nom de la fleur"
+                            placeholder="Flower name"
                             className="min-w-0 flex-1 rounded-lg border border-dore/20 bg-cacao/40 px-3 py-2 font-serif text-base text-creme focus:border-dore/50"
                           />
                         </div>
@@ -289,7 +289,7 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
                                 ),
                               )
                             }
-                            placeholder="Titre du message"
+                            placeholder="Message heading"
                             className="w-full rounded-lg border border-dore/20 bg-cacao/40 px-3 py-2 text-sm text-creme placeholder:text-latte/40 focus:border-dore/50"
                           />
                           <textarea
@@ -303,7 +303,7 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
                               )
                             }
                             rows={5}
-                            placeholder="Le message…"
+                            placeholder="The message…"
                             className="w-full resize-y rounded-lg border border-dore/20 bg-cacao/40 px-3 py-2 text-sm leading-relaxed text-creme placeholder:text-latte/40 focus:border-dore/50"
                           />
                         </div>
@@ -316,28 +316,28 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
 
             {tab === 'lettre' && (
               <Card
-                title="La lettre d'amour"
-                description="Présentée sur un parchemin scellé à la cire. Laissez une ligne vide entre deux paragraphes."
+                title="The love letter"
+                description="Shown on parchment sealed with wax. Leave a blank line between paragraphs."
               >
                 <div className="space-y-4">
                   <TextField
-                    label="Appel"
+                    label="Salutation"
                     value={config.letter.title}
                     onChange={(title) => patch('letter', { ...config.letter, title })}
-                    placeholder="Ma Sofia,"
+                    placeholder="My Sofia,"
                   />
                   <TextArea
-                    label="Corps de la lettre"
+                    label="Letter body"
                     value={config.letter.body}
                     onChange={(body) => patch('letter', { ...config.letter, body })}
                     rows={16}
-                    hint="Une ligne vide sépare les paragraphes. La première lettre est calligraphiée."
+                    hint="A blank line separates paragraphs. The first letter is set in script."
                   />
                   <TextField
                     label="Signature"
                     value={config.letter.signature}
                     onChange={(signature) => patch('letter', { ...config.letter, signature })}
-                    placeholder="Pour toujours, à toi."
+                    placeholder="Yours, always."
                   />
                 </div>
               </Card>
@@ -345,9 +345,9 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
 
             {tab === 'galerie' && (
               <>
-                <Card title="Introduction du jardin" description="Texte affiché au-dessus des fleurs.">
+                <Card title="Garden intro" description="Text shown above the flowers.">
                   <TextArea
-                    label="Texte d'introduction"
+                    label="Intro text"
                     value={config.gardenIntro}
                     onChange={(gardenIntro) => patch('gardenIntro', gardenIntro)}
                     rows={3}
@@ -377,12 +377,12 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
               <span className="text-carminClair">{error}</span>
             ) : justSaved ? (
               <span className="flex items-center gap-1.5 text-dore">
-                <Check className="h-3.5 w-3.5" /> Enregistré
+                <Check className="h-3.5 w-3.5" /> Saved
               </span>
             ) : dirty ? (
-              'Modifications non enregistrées'
+              'Unsaved changes'
             ) : (
-              'Tout est à jour'
+              'Everything is up to date'
             )}
           </p>
 
@@ -393,7 +393,7 @@ export default function Editor({ initialConfig, initialBackend, onSignOut }: Edi
             className="btn-gold shrink-0 !px-5 !py-2.5 text-sm"
           >
             {saving ? <Spinner /> : <Save className="h-4 w-4" />}
-            {saving ? 'Enregistrement…' : 'Enregistrer'}
+            {saving ? 'Saving…' : 'Save'}
           </button>
         </div>
       </div>
